@@ -1,55 +1,43 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TEAM FINDER | Find Your Squad</title>
-    <!-- Dynamic Favicon using brand assets -->
-    <link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500"><path d="M250 50 L400 120 V250 C400 350 250 450 250 450 C250 450 100 350 100 250 V120 L250 50 Z" fill="%23003B73" /><circle cx="250" cy="250" r="120" fill="white"/><path d="M330 330 L420 420" stroke="%23333" stroke-width="40" stroke-linecap="round"/></svg>' />
+
+    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
       body {
         font-family: 'Inter', sans-serif;
         background-color: #09090b;
         color: #fafafa;
       }
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #09090b;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #27272a;
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #3f3f46;
-      }
-      /* Custom brand colors based on logo */
-      .bg-brand-orange { background-color: #F58220; }
-      .text-brand-orange { color: #F58220; }
-      .border-brand-orange { border-color: #F58220; }
-      .bg-brand-blue { background-color: #003B73; }
-      .text-brand-blue { color: #003B73; }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-router-dom": "https://esm.sh/react-router-dom@^7.11.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
-  }
-}
-</script>
-</head>
+
+    <!-- React import map -->
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@18",
+          "react-dom/client": "https://esm.sh/react-dom@18/client"
+        }
+      }
+    </script>
+  </head>
+
   <body>
     <div id="root"></div>
+
+    <script type="module" src="./src/main.jsx"></script>
   </body>
 </html>
