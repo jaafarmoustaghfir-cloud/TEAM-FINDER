@@ -1,0 +1,7 @@
+{
+  "name": "TEAM FINDER",
+  "description": "A modern sports platform connecting football players with teams and clubs. Features advanced search, AI-powered matching, and professional profile management.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
