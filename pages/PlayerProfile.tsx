@@ -36,12 +36,9 @@ const PlayerProfile: React.FC = () => {
   }, [id]);
 
   useEffect(() => {
-    // Handle hash scrolling for #skills-videos
     if (location.hash === '#skills-videos') {
       const el = document.getElementById('skills-videos');
-      if (el) {
-        setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 500);
-      }
+      if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 500);
     }
   }, [location.hash, player]);
 
@@ -77,10 +74,6 @@ const PlayerProfile: React.FC = () => {
     setIsContactRevealed(true);
   };
 
-  /**
-   * SECTION 1: Video Evidence Upload & Recommendation Logic
-   * When a player uploads a video, they are flagged as 'isRecommended' for scouting algorithms.
-   */
   const addMedia = (data: { url: string; type: 'image' | 'video'; mimeType: string; name: string }) => {
     const newItem: MediaItem = {
       id: `media_${Date.now()}`,
@@ -105,7 +98,6 @@ const PlayerProfile: React.FC = () => {
 
   return (
     <div className="min-h-screen pb-24 bg-zinc-950">
-      {/* Profile Header */}
       <div className="relative h-[550px] bg-zinc-900 overflow-hidden">
         <div className="absolute inset-0">
           <img 
@@ -171,7 +163,7 @@ const PlayerProfile: React.FC = () => {
                   className="flex items-center gap-3 px-10 py-6 rounded-[2rem] font-black transition-all shadow-2xl active:scale-95 uppercase tracking-widest text-xs bg-orange-600 hover:bg-orange-500 text-white"
                 >
                   <Plus className="w-4 h-4" />
-                  Add Video Reel
+                  Add Video Proof
                 </button>
               )}
             </div>
@@ -182,12 +174,11 @@ const PlayerProfile: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 mt-20 grid grid-cols-1 lg:grid-cols-12 gap-16">
         <div className="lg:col-span-8 space-y-24">
           
-          {/* SECTION 1: Skills Videos */}
           <section id="skills-videos" className="scroll-mt-24">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
               <div>
                 <h2 className="text-4xl font-black text-white flex items-center gap-4 uppercase tracking-tighter">
-                  <Video className="w-10 h-10 text-orange-500" /> Performance Evidence
+                  <Video className="w-10 h-10 text-orange-500" /> Performance Proof
                 </h2>
                 <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest mt-2">Professional proof of technical ability (MP4, WEBM)</p>
               </div>
@@ -195,7 +186,6 @@ const PlayerProfile: React.FC = () => {
                 <button onClick={() => { setActiveMediaTab('video'); setVideoCategory('highlight'); }} className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeMediaTab === 'video' && videoCategory === 'highlight' ? 'bg-orange-600 text-white' : 'text-zinc-500 hover:text-white'}`}>Highlights</button>
                 <button onClick={() => { setActiveMediaTab('video'); setVideoCategory('match'); }} className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeMediaTab === 'video' && videoCategory === 'match' ? 'bg-orange-600 text-white' : 'text-zinc-500 hover:text-white'}`}>Match Clips</button>
                 <button onClick={() => { setActiveMediaTab('video'); setVideoCategory('training'); }} className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeMediaTab === 'video' && videoCategory === 'training' ? 'bg-orange-600 text-white' : 'text-zinc-500 hover:text-white'}`}>Training</button>
-                <button onClick={() => setActiveMediaTab('photos')} className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeMediaTab === 'photos' ? 'bg-orange-600 text-white' : 'text-zinc-500 hover:text-white'}`}>Gallery</button>
               </div>
             </div>
             
@@ -220,36 +210,26 @@ const PlayerProfile: React.FC = () => {
                     <p className="text-zinc-500 text-xs mb-8 uppercase font-bold">Uploaded videos are required to be recommended to teams.</p>
                     {isOwner && (
                       <button onClick={() => setIsUploadModalOpen(true)} className="bg-white text-zinc-950 px-10 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all shadow-xl">
-                        Add Video Proof
+                        Upload Video Evidence
                       </button>
                     )}
                   </div>
                 )
-              ) : (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-6 p-10 h-full overflow-y-auto custom-scrollbar bg-zinc-950/50">
-                   {photos.map(img => (
-                     <div key={img.id} className="relative aspect-square rounded-2xl overflow-hidden group/img border border-zinc-800">
-                       <img src={img.url} className="w-full h-full object-cover" alt={img.name} />
-                       {isOwner && <button onClick={() => removeMedia(img.id)} className="absolute top-4 right-4 p-2.5 bg-red-600 text-white rounded-xl opacity-0 group-hover/img:opacity-100 transition-opacity"><Trash2 className="w-4 h-4" /></button>}
-                     </div>
-                   ))}
-                </div>
-              )}
+              ) : null}
             </div>
           </section>
 
-          {/* SECTION 3: Contact Access */}
           <section id="contact-info">
             <div className="flex items-center justify-between mb-10">
               <h2 className="text-4xl font-black text-white flex items-center gap-4 uppercase tracking-tighter">
-                <Phone className="w-10 h-10 text-orange-500" /> Contact Registry
+                <Phone className="w-10 h-10 text-orange-500" /> Secure Contact Registry
               </h2>
             </div>
             <div className="bg-zinc-900 border border-zinc-800 rounded-[3.5rem] p-12 relative overflow-hidden shadow-2xl">
               {!isContactRevealed ? (
                 <div className="py-12 text-center">
                   <div className="w-20 h-20 bg-zinc-950 rounded-full flex items-center justify-center mx-auto mb-8 border border-zinc-800"><Lock className="w-10 h-10 text-zinc-600" /></div>
-                  <h4 className="text-3xl font-black text-white uppercase mb-4 tracking-tighter">Profile Access Secured</h4>
+                  <h4 className="text-3xl font-black text-white uppercase mb-4 tracking-tighter">Contact Access Restricted</h4>
                   <p className="text-zinc-500 text-sm mb-12">Registry details are strictly reserved for verified club scouts.</p>
                   <button onClick={handleRevealContact} className="bg-white text-zinc-950 px-12 py-5 rounded-[2rem] font-black uppercase text-xs tracking-widest hover:bg-orange-500 hover:text-white transition-all shadow-2xl">Authenticate to Connect</button>
                 </div>
@@ -257,35 +237,25 @@ const PlayerProfile: React.FC = () => {
                 <div className="animate-in fade-in zoom-in-95 duration-500">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="space-y-6">
-                      <div className="p-8 bg-zinc-950 rounded-[2rem] border border-zinc-800 flex items-center gap-6 shadow-inner">
+                      <div className="p-8 bg-zinc-950 rounded-[2rem] border border-zinc-800 flex items-center gap-6">
                         <div className="w-12 h-12 bg-zinc-900 rounded-xl flex items-center justify-center text-orange-500"><Phone className="w-6 h-6" /></div>
-                        <div><p className="text-zinc-600 text-[10px] font-black uppercase tracking-widest mb-1">Office Line</p><p className="text-white font-black text-xl">{player.contactInfo.phone}</p></div>
+                        <div><p className="text-zinc-600 text-[10px] font-black uppercase tracking-widest mb-1">Phone</p><p className="text-white font-black text-xl">{player.contactInfo.phone}</p></div>
                       </div>
-                      <div className="p-8 bg-zinc-950 rounded-[2rem] border border-zinc-800 flex items-center gap-6 shadow-inner">
+                      <div className="p-8 bg-zinc-950 rounded-[2rem] border border-zinc-800 flex items-center gap-6">
                         <div className="w-12 h-12 bg-zinc-900 rounded-xl flex items-center justify-center text-orange-500"><Mail className="w-6 h-6" /></div>
-                        <div><p className="text-zinc-600 text-[10px] font-black uppercase tracking-widest mb-1">Official Email</p><p className="text-white font-black text-xl break-all">{player.contactInfo.email}</p></div>
+                        <div><p className="text-zinc-600 text-[10px] font-black uppercase tracking-widest mb-1">Email</p><p className="text-white font-black text-xl break-all">{player.contactInfo.email}</p></div>
                       </div>
                     </div>
                   </div>
                   <div className="mt-12 flex justify-center">
-                    <button onClick={() => setIsContactRevealed(false)} className="text-zinc-500 hover:text-white text-[10px] font-black uppercase tracking-widest">Terminate Registry Session</button>
+                    <button onClick={() => setIsContactRevealed(false)} className="text-zinc-500 hover:text-white text-[10px] font-black uppercase tracking-widest">Close Secure Registry Session</button>
                   </div>
                 </div>
               )}
             </div>
           </section>
-
-          {/* Background */}
-          <section>
-            <h2 className="text-4xl font-black text-white mb-10 flex items-center gap-4 uppercase tracking-tighter"><Info className="w-10 h-10 text-orange-500" /> Athletic Background</h2>
-            <div className="bg-zinc-900 border border-zinc-800 p-12 rounded-[3rem] text-zinc-400 text-xl font-medium shadow-2xl relative overflow-hidden">
-               <div className="absolute top-0 right-0 p-12 opacity-5"><History className="w-40 h-40" /></div>
-               <p className="relative z-10">{player.bio}</p>
-            </div>
-          </section>
         </div>
 
-        {/* Sidebar */}
         <aside className="lg:col-span-4 space-y-10">
            <div className="bg-zinc-900 border border-zinc-800 rounded-[3.5rem] p-10 sticky top-32 shadow-2xl">
               <h3 className="text-3xl font-black text-white mb-10 uppercase tracking-tighter flex items-center gap-3">
@@ -303,19 +273,6 @@ const PlayerProfile: React.FC = () => {
                     </div>
                   </div>
                 ))}
-              </div>
-
-              <div className="mt-12 grid grid-cols-2 gap-5">
-                <div className="bg-zinc-950 p-6 rounded-[2rem] border border-zinc-800 text-center shadow-inner">
-                  <Ruler className="w-6 h-6 text-orange-500 mx-auto mb-3" />
-                  <div className="text-zinc-600 text-[10px] uppercase font-black mb-1">Height</div>
-                  <div className="text-white font-black text-xl">{player.height}cm</div>
-                </div>
-                <div className="bg-zinc-950 p-6 rounded-[2rem] border border-zinc-800 text-center shadow-inner">
-                  <Weight className="w-6 h-6 text-orange-500 mx-auto mb-3" />
-                  <div className="text-zinc-600 text-[10px] uppercase font-black mb-1">Weight</div>
-                  <div className="text-white font-black text-xl">{player.weight}kg</div>
-                </div>
               </div>
            </div>
         </aside>
@@ -335,7 +292,7 @@ const PlayerProfile: React.FC = () => {
           <div className="relative w-full max-w-xl bg-zinc-900 border border-zinc-800 rounded-[3rem] p-12 overflow-hidden shadow-2xl animate-in zoom-in-95">
             <div className="flex items-center justify-between mb-10">
                <div>
-                  <h3 className="text-3xl font-black text-white uppercase tracking-tighter">Add Evidence reel</h3>
+                  <h3 className="text-3xl font-black text-white uppercase tracking-tighter">Add Evidence Reel</h3>
                   <p className="text-zinc-500 text-[10px] font-black uppercase tracking-widest mt-1">MP4, WEBM (Max 500MB)</p>
                </div>
                <button onClick={() => setIsUploadModalOpen(false)} className="p-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 rounded-full transition-colors"><X className="w-6 h-6" /></button>
@@ -353,26 +310,11 @@ const PlayerProfile: React.FC = () => {
                ))}
             </div>
 
-            {activeMediaTab === 'video' && (
-              <div className="mb-8 grid grid-cols-3 gap-2">
-                {(['highlight', 'match', 'training'] as const).map(cat => (
-                  <button 
-                    key={cat}
-                    onClick={() => setVideoCategory(cat)}
-                    className={`py-3 rounded-xl text-[9px] font-black uppercase border transition-all ${videoCategory === cat ? 'bg-orange-500/10 border-orange-500 text-orange-500' : 'bg-zinc-950 border-zinc-800 text-zinc-500'}`}
-                  >
-                    {cat === 'highlight' ? 'Highlights' : cat === 'match' ? 'Match' : 'Training'}
-                  </button>
-                ))}
-              </div>
-            )}
-
             <MediaUpload 
               accept={activeMediaTab === 'video' ? 'video/*' : 'image/*'} 
               label={`Select ${videoCategory.toUpperCase()} File`} 
               onUpload={addMedia} 
             />
-            
             <button onClick={() => setIsUploadModalOpen(false)} className="w-full mt-8 py-4 text-zinc-500 uppercase font-black text-[10px] tracking-widest">Cancel Upload</button>
           </div>
         </div>

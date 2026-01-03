@@ -1,7 +1,7 @@
 
 import React, { useState, createContext, useContext, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Mail, Instagram, ShieldAlert, UserCircle } from 'lucide-react';
+import { Mail, Instagram, ShieldAlert, UserCircle, Phone } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Search from './pages/Search';
@@ -37,9 +37,13 @@ const Footer = () => (
         </p>
         <div className="flex flex-col gap-4">
           <p className="text-zinc-400 text-xs font-bold uppercase tracking-widest">Connect With Us</p>
-          <div className="flex gap-4">
-            <a href="https://instagram.com/teamfinder_x" target="_blank" className="w-10 h-10 bg-zinc-900 rounded-xl flex items-center justify-center text-zinc-400 hover:text-orange-500 transition-all border border-zinc-800"><Instagram className="w-5 h-5" /></a>
-            <a href="mailto:jaafarmoustaghfir@gmail.com" className="w-10 h-10 bg-zinc-900 rounded-xl flex items-center justify-center text-zinc-400 hover:text-orange-500 transition-all border border-zinc-800"><Mail className="w-5 h-5" /></a>
+          <div className="flex gap-4 items-center">
+            <a href="https://instagram.com/teamfinder_x" target="_blank" className="w-10 h-10 bg-zinc-900 rounded-xl flex items-center justify-center text-zinc-400 hover:text-orange-500 transition-all border border-zinc-800" title="Instagram"><Instagram className="w-5 h-5" /></a>
+            <a href="mailto:jaafarmoustaghfir@gmail.com" className="w-10 h-10 bg-zinc-900 rounded-xl flex items-center justify-center text-zinc-400 hover:text-orange-500 transition-all border border-zinc-800" title="Email"><Mail className="w-5 h-5" /></a>
+            <a href="tel:0772908456" className="h-10 px-4 bg-zinc-900 rounded-xl flex items-center gap-3 text-zinc-400 hover:text-orange-500 transition-all border border-zinc-800" title="Phone Support">
+              <Phone className="w-4 h-4" />
+              <span className="text-xs font-black tracking-widest">0772908456</span>
+            </a>
           </div>
         </div>
       </div>
@@ -54,8 +58,8 @@ const Footer = () => (
       <div>
         <h4 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Support</h4>
         <ul className="space-y-4 text-sm text-zinc-500 font-medium">
-          <li><a href="mailto:jaafarmoustaghfir@gmail.com" className="hover:text-orange-500 transition-colors">Help Center</a></li>
-          <li><a href="#/contact" className="hover:text-orange-500 transition-colors">Contact Support</a></li>
+          <li><a href="tel:0772908456" className="hover:text-orange-500 transition-colors">Help Center: 0772908456</a></li>
+          <li><a href="mailto:jaafarmoustaghfir@gmail.com" className="hover:text-orange-500 transition-colors">Email Support</a></li>
           <li><a href="#" className="hover:text-orange-500 transition-colors">Privacy Policy</a></li>
         </ul>
       </div>
