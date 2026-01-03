@@ -1,55 +1,627 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TEAM FINDER | Find Your Squad</title>
-    <!-- Dynamic Favicon using brand assets -->
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500"><path d="M250 50 L400 120 V250 C400 350 250 450 250 450 C250 450 100 350 100 250 V120 L250 50 Z" fill="%23003B73" /><circle cx="250" cy="250" r="120" fill="white"/><path d="M330 330 L420 420" stroke="%23333" stroke-width="40" stroke-linecap="round"/></svg>' />
+
+    <!-- Dependencies -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
     <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: #09090b;
-        color: #fafafa;
-      }
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #09090b;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #27272a;
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #3f3f46;
-      }
-      /* Custom brand colors based on logo */
-      .bg-brand-orange { background-color: #F58220; }
-      .text-brand-orange { color: #F58220; }
-      .border-brand-orange { border-color: #F58220; }
-      .bg-brand-blue { background-color: #003B73; }
-      .text-brand-blue { color: #003B73; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #09090b;
+            color: #fafafa;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .hidden { display: none !important; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #09090b; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+
+        .brand-gradient {
+            background: linear-gradient(to right, #f58220, #ea580c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .animate-fade {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass {
+            background: rgba(18, 18, 23, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(39, 39, 42, 0.5);
+        }
+
+        .card-hover:hover {
+            border-color: rgba(245, 130, 32, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5);
+        }
+
+        input[type="range"] {
+            accent-color: #f58220;
+        }
     </style>
-  <script type="importmap">
+<script type="importmap">
 {
   "imports": {
-    "react/": "https://esm.sh/react@^19.2.3/",
     "react": "https://esm.sh/react@^19.2.3",
     "react-router-dom": "https://esm.sh/react-router-dom@^7.11.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "react/": "https://esm.sh/react@^19.2.3/"
   }
 }
 </script>
 </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<body>
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 glass border-b border-zinc-800 h-20">
+        <div class="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="#" onclick="route('home')" class="flex items-center gap-3 group">
+                    <div class="h-10 w-10 sm:h-12 sm:w-12 flex items-center justify-center">
+                        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 500'><path d='M250 50 L400 120 V250 C400 350 250 450 250 450 C250 450 100 350 100 250 V120 L250 50 Z' fill='%23003B73' /><circle cx='250' cy='250' r='120' fill='white'/><path d='M330 330 L420 420' stroke='%23333' stroke-width='40' stroke-linecap='round'/></svg>" class="max-h-full" />
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-xl font-black tracking-tighter text-white uppercase leading-none">
+                            TEAM<span class="text-orange-500">FINDER</span>
+                        </span>
+                        <span class="text-[10px] font-bold text-zinc-500 tracking-widest uppercase hidden sm:block">Find Your Squad.</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#" onclick="route('home')" class="text-xs font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">Home</a>
+                <a href="#" onclick="route('search')" class="text-xs font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">Search</a>
+                <a href="#" onclick="route('about')" class="text-xs font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">About</a>
+
+                <div class="h-4 w-px bg-zinc-800 mx-2"></div>
+
+                <!-- Role Selector -->
+                <div class="relative group">
+                    <button class="flex items-center gap-3 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl hover:border-zinc-700 transition-all">
+                        <div id="role-indicator" class="w-6 h-6 rounded-full bg-zinc-700 flex items-center justify-center text-white">
+                            <i data-lucide="user-circle" class="w-4 h-4"></i>
+                        </div>
+                        <span id="current-role-text" class="text-[10px] font-black uppercase text-white tracking-widest">Guest</span>
+                        <i data-lucide="chevron-down" class="w-3 h-3 text-zinc-500"></i>
+                    </button>
+                    <div class="absolute top-full right-0 mt-2 w-48 bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden hidden group-hover:block animate-fade">
+                        <div class="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-zinc-500 border-b border-zinc-800 bg-zinc-950">Switch View</div>
+                        <button onclick="setRole('guest')" class="w-full text-left px-4 py-3 text-[10px] font-bold uppercase text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all">Guest Access</button>
+                        <button onclick="setRole('player')" class="w-full text-left px-4 py-3 text-[10px] font-bold uppercase text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all">Player Portal</button>
+                        <button onclick="setRole('team')" class="w-full text-left px-4 py-3 text-[10px] font-bold uppercase text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all">Club Dashboard</button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="md:hidden text-zinc-400">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- App Root -->
+    <main id="app-root">
+        <!-- Home View -->
+        <div id="view-home" class="animate-fade">
+            <section class="relative h-[85vh] flex items-center justify-center px-4">
+                <div class="absolute inset-0">
+                    <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=2400" class="w-full h-full object-cover opacity-20 grayscale" />
+                    <div class="absolute inset-0 bg-gradient-to-b from-zinc-950 via-transparent to-zinc-950"></div>
+                </div>
+
+                <div class="relative z-10 max-w-7xl mx-auto text-center">
+                    <div class="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-500 text-[10px] font-black uppercase tracking-[0.3em] mb-12">
+                        <i data-lucide="zap" class="w-4 h-4"></i> Professional Scouting Engine
+                    </div>
+                    <h1 class="text-6xl md:text-[9rem] font-black text-white mb-10 leading-[0.85] tracking-tighter uppercase">
+                        Find Your Team.<br />
+                        <span class="brand-gradient drop-shadow-2xl">Find Your Player.</span>
+                    </h1>
+                    <p class="text-xl md:text-2xl text-zinc-500 max-w-4xl mx-auto mb-16 font-medium">Verified performance evidence and algorithm-driven discovery for athletes and clubs.</p>
+
+                    <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                        <button onclick="setRole('player')" class="px-14 py-7 bg-orange-600 hover:bg-orange-500 text-white rounded-[2rem] font-black text-xl transition-all shadow-2xl uppercase tracking-widest active:scale-95">I am a Player</button>
+                        <button onclick="setRole('team')" class="px-14 py-7 bg-zinc-900 border border-zinc-800 text-white rounded-[2rem] font-black text-xl transition-all shadow-2xl uppercase tracking-widest active:scale-95">I am a Team</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feature Cards -->
+            <section class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-10 py-24">
+                <div onclick="route('player-profile')" class="bg-zinc-900 border border-zinc-800 p-12 rounded-[3.5rem] card-hover transition-all cursor-pointer group">
+                    <i data-lucide="video" class="w-12 h-12 text-orange-500 mb-8 transition-transform group-hover:scale-110"></i>
+                    <h3 class="text-2xl font-black text-white uppercase tracking-tighter mb-4">Performance Reels</h3>
+                    <p class="text-zinc-500 font-medium leading-relaxed">Upload your match highlights. Verified video evidence is required for recruitment visibility.</p>
+                </div>
+                <div onclick="scrollToSection('recs-section')" class="bg-zinc-900 border border-zinc-800 p-12 rounded-[3.5rem] card-hover transition-all cursor-pointer group">
+                    <i data-lucide="target" class="w-12 h-12 text-blue-500 mb-8 transition-transform group-hover:scale-110"></i>
+                    <h3 class="text-2xl font-black text-white uppercase tracking-tighter mb-4">Smart Matching</h3>
+                    <p class="text-zinc-500 font-medium leading-relaxed">Personalized club recommendations based on your technical stats and location.</p>
+                </div>
+                <div onclick="route('search')" class="bg-zinc-900 border border-zinc-800 p-12 rounded-[3.5rem] card-hover transition-all cursor-pointer group">
+                    <i data-lucide="shield" class="w-12 h-12 text-emerald-500 mb-8 transition-transform group-hover:scale-110"></i>
+                    <h3 class="text-2xl font-black text-white uppercase tracking-tighter mb-4">Verified Registry</h3>
+                    <p class="text-zinc-500 font-medium leading-relaxed">Direct access to a database of official clubs and semi-pro teams worldwide.</p>
+                </div>
+            </section>
+
+            <!-- Recommendations Section -->
+            <section id="recs-section" class="max-w-7xl mx-auto px-4 py-24 hidden">
+                <div class="flex items-center gap-4 mb-16">
+                    <div class="p-3 bg-orange-600 rounded-2xl shadow-lg shadow-orange-900/20">
+                        <i data-lucide="sparkles" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-4xl font-black text-white uppercase tracking-tighter">Matches for You</h2>
+                        <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mt-1">Based on your Profile Stats</p>
+                    </div>
+                </div>
+                <div id="recs-container" class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <!-- Dynamic Team Cards -->
+                </div>
+            </section>
+        </div>
+
+        <!-- Search View -->
+        <div id="view-search" class="hidden animate-fade px-4 py-24">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row items-end justify-between gap-8 mb-16">
+                    <div>
+                        <h1 class="text-6xl font-black text-white uppercase tracking-tighter">Global Scouter</h1>
+                        <p class="text-zinc-500 font-bold uppercase tracking-widest text-xs mt-2">Browse verified clubs and academies</p>
+                    </div>
+                    <div class="flex-1 max-w-xl relative">
+                        <i data-lucide="search" class="absolute left-6 top-1/2 -translate-y-1/2 text-zinc-600"></i>
+                        <input id="team-search-input" type="text" placeholder="Search by name, city, or level..." class="w-full bg-zinc-900 border border-zinc-800 rounded-[2rem] py-6 pl-16 pr-8 text-white outline-none focus:border-orange-500 transition-all font-bold">
+                    </div>
+                </div>
+
+                <div id="search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <!-- Search Results -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Player Profile View -->
+        <div id="view-player-profile" class="hidden animate-fade">
+            <section class="relative h-[600px] bg-zinc-900 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1543353071-10c8ba85a904?w=1600" class="w-full h-full object-cover opacity-20 grayscale" />
+                <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent"></div>
+
+                <div class="absolute inset-0 flex items-end pb-24 px-4">
+                    <div class="max-w-7xl mx-auto w-full flex flex-col md:flex-row items-end gap-12">
+                        <div class="relative group">
+                            <div class="w-64 h-64 rounded-[4rem] bg-zinc-800 border-8 border-zinc-950 overflow-hidden shadow-2xl">
+                                <img id="player-profile-img" src="https://images.unsplash.com/photo-1543353071-10c8ba85a904?w=400&h=400&fit=crop" class="w-full h-full object-cover" />
+                            </div>
+                            <label class="absolute bottom-4 right-4 bg-orange-600 p-4 rounded-3xl border-4 border-zinc-950 shadow-xl cursor-pointer hover:bg-orange-500 transition-colors">
+                                <i data-lucide="camera" class="w-5 h-5 text-white"></i>
+                                <input type="file" class="hidden" accept="image/*" onchange="updatePlayerPhoto(event)">
+                            </label>
+                        </div>
+                        <div class="flex-1 pb-4">
+                            <div class="flex items-center gap-4 mb-6">
+                                <span class="bg-orange-600 text-white px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg">Attacker</span>
+                                <span class="bg-zinc-800 text-zinc-300 px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-zinc-700">Milan, Italy</span>
+                            </div>
+                            <h1 class="text-7xl md:text-9xl font-black text-white tracking-tighter uppercase leading-[0.8]">Marco<br/><span class="text-orange-500">Rossi</span></h1>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="max-w-7xl mx-auto px-4 py-24 grid grid-cols-1 lg:grid-cols-12 gap-20">
+                <div class="lg:col-span-8 space-y-24">
+                    <!-- Media Gallery -->
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-[4rem] p-12 shadow-2xl">
+                        <div class="flex items-center justify-between mb-12">
+                            <div>
+                                <h3 class="text-4xl font-black text-white uppercase tracking-tighter">Performance Reels</h3>
+                                <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mt-1">Video evidence for official scouts</p>
+                            </div>
+                            <label class="bg-white hover:bg-zinc-200 text-zinc-950 px-10 py-4 rounded-[1.5rem] font-black uppercase text-xs tracking-widest cursor-pointer shadow-xl transition-all active:scale-95">
+                                <span class="flex items-center gap-2"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Upload Video</span>
+                                <input type="file" class="hidden" accept="video/*" onchange="uploadMedia(event, 'video')">
+                            </label>
+                        </div>
+
+                        <div id="player-media-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-8 min-h-[300px]">
+                            <div class="col-span-full flex flex-col items-center justify-center py-20 text-center opacity-40">
+                                <i data-lucide="file-video" class="w-20 h-20 mb-6"></i>
+                                <p class="text-zinc-500 font-black uppercase tracking-widest text-xs">No media uploaded yet</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-10">
+                        <h3 class="text-4xl font-black text-white uppercase tracking-tighter">Career Background</h3>
+                        <p class="text-zinc-400 text-2xl leading-relaxed font-medium">Explosive winger with a keen eye for goal. Quick in transition and clinical finisher. 8 years of elite training experience across Milan academies.</p>
+                    </div>
+                </div>
+
+                <aside class="lg:col-span-4 space-y-10">
+                    <div class="bg-zinc-900 border border-zinc-800 p-12 rounded-[3.5rem] shadow-2xl">
+                        <h4 class="text-3xl font-black text-white mb-12 uppercase tracking-tighter flex items-center gap-3">
+                            <i data-lucide="activity" class="text-orange-500"></i> Stats
+                        </h4>
+                        <div class="space-y-10">
+                            <div>
+                                <div class="flex justify-between mb-4"><span class="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Speed</span><span class="text-xs font-black text-white">88%</span></div>
+                                <div class="h-3 bg-zinc-950 rounded-full overflow-hidden p-0.5"><div class="h-full bg-orange-600 rounded-full shadow-[0_0_15px_rgba(245,130,32,0.4)]" style="width: 88%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-4"><span class="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Shooting</span><span class="text-xs font-black text-white">85%</span></div>
+                                <div class="h-3 bg-zinc-950 rounded-full overflow-hidden p-0.5"><div class="h-full bg-orange-600 rounded-full shadow-[0_0_15px_rgba(245,130,32,0.4)]" style="width: 85%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-4"><span class="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Dribbling</span><span class="text-xs font-black text-white">92%</span></div>
+                                <div class="h-3 bg-zinc-950 rounded-full overflow-hidden p-0.5"><div class="h-full bg-orange-600 rounded-full shadow-[0_0_15px_rgba(245,130,32,0.4)]" style="width: 92%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </section>
+        </div>
+
+        <!-- Team Profile View -->
+        <div id="view-team-profile" class="hidden animate-fade">
+            <section class="h-[450px] relative overflow-hidden bg-zinc-900">
+                <img src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=1600" class="w-full h-full object-cover opacity-20 grayscale" />
+                <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-16 md:p-24 max-w-7xl mx-auto">
+                    <div class="flex items-end gap-10">
+                        <div class="relative group">
+                            <div class="w-48 h-48 rounded-[3.5rem] bg-zinc-800 border-8 border-zinc-950 overflow-hidden shadow-2xl">
+                                <img id="team-logo-img" src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=200&h=200&fit=crop" class="w-full h-full object-cover" />
+                            </div>
+                            <label class="absolute bottom-2 right-2 bg-blue-600 p-3 rounded-2xl border-4 border-zinc-950 shadow-xl cursor-pointer">
+                                <i data-lucide="edit-3" class="w-4 h-4 text-white"></i>
+                                <input type="file" class="hidden" accept="image/*" onchange="updateTeamLogo(event)">
+                            </label>
+                        </div>
+                        <div class="mb-6">
+                            <h1 id="team-name-display" class="text-6xl md:text-8xl font-black text-white tracking-tighter uppercase leading-none">Red Star</h1>
+                            <div class="flex items-center gap-4 mt-6">
+                                <p id="team-loc-display" class="text-zinc-500 text-sm font-black uppercase tracking-widest flex items-center gap-2">
+                                    <i data-lucide="map-pin" class="w-4 h-4 text-blue-500"></i> Paris, France
+                                </p>
+                                <a id="team-map-link" href="#" target="_blank" class="hidden text-blue-500 text-xs font-black uppercase tracking-widest hover:text-white transition-colors">View Map</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="max-w-7xl mx-auto px-4 py-24 grid grid-cols-1 lg:grid-cols-12 gap-16">
+                <div class="lg:col-span-8">
+                    <!-- Venue Management (Owner only) -->
+                    <div id="team-management-ui" class="hidden bg-zinc-900 border border-zinc-800 p-12 rounded-[4rem] shadow-2xl mb-16">
+                        <h3 class="text-3xl font-black text-white mb-10 uppercase tracking-tighter flex items-center gap-3">
+                            <i data-lucide="settings" class="text-blue-500"></i> Venue Management
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <label class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-3 block">City, Country</label>
+                                <input type="text" id="input-team-loc" placeholder="Paris, France" class="w-full bg-zinc-950 border border-zinc-800 rounded-2xl p-6 text-white outline-none focus:border-blue-600 font-bold transition-all">
+                            </div>
+                            <div>
+                                <label class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-3 block">Google Maps Link</label>
+                                <input type="text" id="input-team-map" placeholder="https://maps.google.com/..." class="w-full bg-zinc-950 border border-zinc-800 rounded-2xl p-6 text-white outline-none focus:border-blue-600 font-bold transition-all">
+                            </div>
+                        </div>
+                        <button onclick="saveTeamInfo()" class="mt-10 px-12 py-6 bg-blue-600 hover:bg-blue-500 text-white rounded-3xl font-black uppercase tracking-widest text-xs shadow-xl active:scale-95 transition-all">Apply Changes</button>
+                    </div>
+
+                    <div class="space-y-10">
+                        <h3 class="text-4xl font-black text-white uppercase tracking-tighter">Club Philosophy</h3>
+                        <p class="text-zinc-400 text-2xl leading-relaxed font-medium">Premier youth development club focusing on explosive attacking football and tactical discipline. We are currently scouting for clinical finishers in the U21 category.</p>
+                    </div>
+                </div>
+
+                <aside class="lg:col-span-4">
+                    <div class="bg-zinc-900 border border-zinc-800 p-12 rounded-[3.5rem] shadow-2xl">
+                         <h4 class="text-2xl font-black text-white mb-8 uppercase tracking-tighter">Recruiting Needs</h4>
+                         <div class="space-y-6">
+                            <div class="flex items-center justify-between p-5 bg-zinc-950 rounded-2xl border border-zinc-800 shadow-inner">
+                                <span class="text-zinc-500 text-[10px] font-black uppercase tracking-widest">Primary Position</span>
+                                <span class="text-white font-black uppercase text-sm">Striker</span>
+                            </div>
+                            <div class="flex items-center justify-between p-5 bg-zinc-950 rounded-2xl border border-zinc-800 shadow-inner">
+                                <span class="text-zinc-500 text-[10px] font-black uppercase tracking-widest">Age Range</span>
+                                <span class="text-white font-black uppercase text-sm">16 - 21</span>
+                            </div>
+                            <div class="flex items-center justify-between p-5 bg-zinc-950 rounded-2xl border border-zinc-800 shadow-inner">
+                                <span class="text-zinc-500 text-[10px] font-black uppercase tracking-widest">Skill Tier</span>
+                                <span class="text-white font-black uppercase text-sm">Elite / Academy</span>
+                            </div>
+                         </div>
+                    </div>
+                </aside>
+            </section>
+        </div>
+
+        <!-- About View -->
+        <div id="view-about" class="hidden animate-fade max-w-4xl mx-auto py-32 px-4 text-center">
+            <h1 class="text-7xl md:text-9xl font-black text-white mb-10 tracking-tighter uppercase leading-[0.8]">The Future<br/><span class="text-orange-500">of Scouting.</span></h1>
+            <p class="text-2xl md:text-3xl text-zinc-500 leading-relaxed font-medium">
+                Team Finder bridges the gap between raw talent and professional opportunities. Our platform uses verified data and video evidence to ensure the best players find the best teams.
+            </p>
+            <div class="mt-20 flex justify-center gap-10">
+                <i data-lucide="award" class="w-12 h-12 text-orange-600"></i>
+                <i data-lucide="globe" class="w-12 h-12 text-blue-600"></i>
+                <i data-lucide="users" class="w-12 h-12 text-emerald-600"></i>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-zinc-950 border-t border-zinc-900 py-32 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-16">
+            <div class="md:col-span-2">
+                <div class="text-3xl font-black tracking-tighter text-white mb-8 uppercase">TEAM<span class="text-orange-500">FINDER</span></div>
+                <p class="text-zinc-500 max-w-sm mb-12 font-medium">Global digital marketplace for football talent and recruitment. Connecting dreams to reality through elite technology.</p>
+                <div class="flex gap-6">
+                    <a href="#" class="w-12 h-12 bg-zinc-900 rounded-2xl flex items-center justify-center text-zinc-500 hover:text-orange-500 transition-all border border-zinc-800 shadow-lg"><i data-lucide="instagram"></i></a>
+                    <a href="#" class="w-12 h-12 bg-zinc-900 rounded-2xl flex items-center justify-center text-zinc-500 hover:text-orange-500 transition-all border border-zinc-800 shadow-lg"><i data-lucide="twitter"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-white font-black mb-8 uppercase tracking-widest text-[10px]">Platform Hub</h4>
+                <ul class="space-y-4 text-xs font-black uppercase tracking-widest text-zinc-600">
+                    <li><a href="#" onclick="route('search')" class="hover:text-white transition-colors">Find Teams</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Scouting Network</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Academy Trials</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-black mb-8 uppercase tracking-widest text-[10px]">Support Network</h4>
+                <ul class="space-y-4 text-xs font-black uppercase tracking-widest text-zinc-600">
+                    <li><a href="mailto:support@teamfinder.com" class="hover:text-white transition-colors">Help Center</a></li>
+                    <li><a href="tel:0772908456" class="text-orange-500 hover:text-white transition-colors flex items-center gap-2">Call: 0772908456</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 mt-24 pt-8 border-t border-zinc-900 text-center text-zinc-800 text-[10px] font-black uppercase tracking-[0.4em]">
+            &copy; 2024 Team Finder Network. Built for Professionals.
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA ---
+        const MOCK_TEAMS = [
+            { id: 't1', name: 'Red Star Academy', level: 'Academy', loc: 'Paris, France', position: 'Attacker', logo: 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=200&h=200&fit=crop', map: '' },
+            { id: 't2', name: 'Berlin United', level: 'Semi-Pro', loc: 'Berlin, Germany', position: 'Defender', logo: 'https://images.unsplash.com/photo-1543352658-929014261097?w=200&h=200&fit=crop', map: '' },
+            { id: 't3', name: 'London Blues', level: 'Professional', loc: 'London, UK', position: 'Midfielder', logo: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=200&h=200&fit=crop', map: '' },
+            { id: 't4', name: 'Milan Strikers', level: 'Academy', loc: 'Milan, Italy', position: 'Attacker', logo: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=200&h=200&fit=crop', map: '' }
+        ];
+
+        let state = {
+            currentView: 'home',
+            role: 'guest',
+            user: {
+                name: 'Marco Rossi',
+                position: 'Attacker',
+                location: 'Milan, Italy'
+            },
+            playerMedia: [],
+            activeTeam: MOCK_TEAMS[0],
+            searchQuery: ''
+        };
+
+        // --- CORE LOGIC ---
+        function route(viewId) {
+            state.currentView = viewId;
+            render();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function setRole(role) {
+            state.role = role;
+            render();
+            if (role !== 'guest') route('home');
+        }
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- MEDIA UPLOADS (TEMPORARY) ---
+        function uploadMedia(event, type) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const url = URL.createObjectURL(file);
+            state.playerMedia.push({
+                id: Date.now(),
+                url,
+                name: file.name,
+                type,
+                date: new Date().toLocaleDateString()
+            });
+            render();
+            alert('File added to temporary session!');
+        }
+
+        function removeMedia(id) {
+            state.playerMedia = state.playerMedia.filter(m => m.id !== id);
+            render();
+        }
+
+        function updatePlayerPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                document.getElementById('player-profile-img').src = url;
+            }
+        }
+
+        function updateTeamLogo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                document.getElementById('team-logo-img').src = url;
+                state.activeTeam.logo = url;
+            }
+        }
+
+        function saveTeamInfo() {
+            const loc = document.getElementById('input-team-loc').value;
+            const map = document.getElementById('input-team-map').value;
+
+            if (loc) state.activeTeam.loc = loc;
+            if (map) state.activeTeam.map = map;
+
+            render();
+            alert('Club location updated successfully!');
+        }
+
+        // --- RENDER ENGINE ---
+        function render() {
+            // Role UI
+            document.getElementById('current-role-text').innerText = state.role === 'guest' ? 'Guest' : state.role === 'player' ? 'Player Portal' : 'Club Admin';
+            const indicator = document.getElementById('role-indicator');
+            indicator.className = `w-6 h-6 rounded-full flex items-center justify-center text-white ${
+                state.role === 'player' ? 'bg-orange-600' : state.role === 'team' ? 'bg-blue-600' : 'bg-zinc-700'
+            }`;
+
+            // View Visibility
+            const views = ['view-home', 'view-search', 'view-player-profile', 'view-team-profile', 'view-about'];
+            views.forEach(v => {
+                document.getElementById(v).classList.toggle('hidden', v !== `view-${state.currentView}`);
+            });
+
+            // Home View Recommendations
+            const recsSection = document.getElementById('recs-section');
+            if (state.currentView === 'home' && state.role === 'player') {
+                recsSection.classList.remove('hidden');
+                const container = document.getElementById('recs-container');
+                const matches = MOCK_TEAMS.filter(t => t.position === state.user.position || t.loc.includes('Italy'));
+
+                container.innerHTML = matches.map(team => `
+                    <div class="bg-zinc-900 border border-zinc-800 p-10 rounded-[3rem] card-hover transition-all group">
+                        <div class="flex items-center gap-6 mb-8">
+                            <img src="${team.logo}" class="w-20 h-20 rounded-2xl object-cover shadow-xl" />
+                            <div>
+                                <h4 class="text-xl font-black text-white uppercase tracking-tighter">${team.name}</h4>
+                                <p class="text-zinc-500 text-xs font-black uppercase tracking-[0.2em]">${team.loc}</p>
+                            </div>
+                        </div>
+                        <div class="bg-zinc-950 p-6 rounded-3xl border border-zinc-800 mb-8 shadow-inner">
+                            <span class="text-[9px] font-black text-orange-500 uppercase tracking-widest block mb-2">Recruiting For</span>
+                            <span class="text-white font-black text-sm uppercase">${team.position}s</span>
+                        </div>
+                        <button onclick="state.activeTeam = MOCK_TEAMS.find(t=>t.id==='${team.id}'); route('team-profile')" class="w-full py-5 bg-white hover:bg-zinc-200 text-zinc-950 font-black uppercase text-[10px] tracking-widest rounded-2xl shadow-xl transition-all active:scale-95">View Official Page</button>
+                    </div>
+                `).join('');
+            } else if (state.currentView === 'home') {
+                recsSection.classList.add('hidden');
+            }
+
+            // Search View Results
+            if (state.currentView === 'search') {
+                const results = document.getElementById('search-results');
+                results.innerHTML = MOCK_TEAMS.map(team => `
+                    <div onclick="state.activeTeam = MOCK_TEAMS.find(t=>t.id==='${team.id}'); route('team-profile')" class="bg-zinc-900 border border-zinc-800 p-8 rounded-[3rem] card-hover cursor-pointer transition-all shadow-xl relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-8 opacity-0 group-hover:opacity-10 transition-opacity">
+                            <i data-lucide="shield" class="w-32 h-32 text-white"></i>
+                        </div>
+                        <div class="flex justify-between items-start mb-8">
+                            <img src="${team.logo}" class="w-16 h-16 rounded-2xl object-cover shadow-lg" />
+                            <span class="bg-zinc-800 text-blue-400 text-[9px] font-black px-4 py-1.5 rounded-xl uppercase tracking-widest">${team.level}</span>
+                        </div>
+                        <h4 class="text-white font-black text-2xl uppercase mb-3 tracking-tighter">${team.name}</h4>
+                        <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-8">${team.loc}</p>
+                        <div class="flex items-center gap-3 text-zinc-400 text-[10px] font-black uppercase tracking-widest">
+                            <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
+                            Scouting ${team.position}s
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Player Profile Media
+            if (state.currentView === 'player-profile') {
+                const grid = document.getElementById('player-media-grid');
+                if (state.playerMedia.length > 0) {
+                    grid.className = "grid grid-cols-1 sm:grid-cols-2 gap-8";
+                    grid.innerHTML = state.playerMedia.map(m => `
+                        <div class="bg-zinc-950 rounded-[2.5rem] overflow-hidden border border-zinc-800 shadow-xl relative group h-64">
+                            ${m.type === 'video'
+                                ? `<video src="${m.url}" class="w-full h-full object-cover" controls></video>`
+                                : `<img src="${m.url}" class="w-full h-full object-cover" />`
+                            }
+                            <button onclick="removeMedia(${m.id})" class="absolute top-4 right-4 p-3 bg-red-600 text-white rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    `).join('');
+                } else {
+                    grid.className = "col-span-full flex flex-col items-center justify-center py-24 text-center opacity-30 border-2 border-dashed border-zinc-800 rounded-[3rem]";
+                    grid.innerHTML = `
+                        <i data-lucide="file-video" class="w-20 h-20 mb-6"></i>
+                        <p class="text-zinc-500 font-black uppercase tracking-[0.3em] text-[10px]">No Verified Evidence</p>
+                    `;
+                }
+            }
+
+            // Team Profile Rendering
+            if (state.currentView === 'team-profile') {
+                const team = state.activeTeam;
+                document.getElementById('team-name-display').innerText = team.name;
+                document.getElementById('team-loc-display').innerHTML = `<i data-lucide="map-pin" class="w-4 h-4 text-blue-500"></i> ${team.loc}`;
+                document.getElementById('team-logo-img').src = team.logo;
+
+                const mapLink = document.getElementById('team-map-link');
+                if (team.map) {
+                    mapLink.href = team.map;
+                    mapLink.classList.remove('hidden');
+                } else {
+                    mapLink.classList.add('hidden');
+                }
+
+                // Show Management UI if role is team
+                document.getElementById('team-management-ui').classList.toggle('hidden', state.role !== 'team');
+            }
+
+            // Refresh Icons
+            lucide.createIcons();
+        }
+
+        // --- INIT ---
+        window.addEventListener('load', () => {
+            lucide.createIcons();
+            render();
+
+            // Search Input Logic
+            document.getElementById('team-search-input')?.addEventListener('input', (e) => {
+                state.searchQuery = e.target.value;
+                // Real-time filtering logic could go here
+            });
+        });
+    </script>
+</body>
 </html>
